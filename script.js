@@ -16,18 +16,26 @@ const gameBoard = (function () {
         }
     }
 
-    function makeBoardSpace() {
+    function makeBoardSpace(row, column) {
         let mark = "";
 
         function setMark(newMark) {
             mark = newMark;
         }
 
-        return { setMark }
+        function getRow() {
+            return row;
+        }
+
+        function getColumn() {
+            return column;
+        }
+
+        return { getRow, getColumn, setMark }
     }
 
     function markSpace(mark, row, column) {
-        board[row][column].changeMark(mark);
+        board[row][column].setMark(mark);
     }
 
     function reset() {
