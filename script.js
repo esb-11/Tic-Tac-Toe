@@ -21,11 +21,15 @@ const gameBoard = (function () {
     }
 
     function markSpace(marker, coord) {
-
+        board[coord[0]][coord[1]].changeMark(marker);
     }
 
     function reset() {
-
+        for (x in board) {
+            for (y in board[row]) {
+                board[x][y].changeMark("");
+            }
+        }
     }
 
     function log() {
