@@ -19,6 +19,10 @@ const gameBoard = (function () {
     function makeBoardSpace(row, column) {
         let mark = "";
 
+        function getMark() {
+            return mark;
+        }
+
         function setMark(newMark) {
             mark = newMark;
         }
@@ -31,7 +35,7 @@ const gameBoard = (function () {
             return column;
         }
 
-        return { getRow, getColumn, setMark }
+        return { getRow, getColumn, getMark, setMark }
     }
 
     function markSpace(mark, row, column) {
@@ -41,7 +45,7 @@ const gameBoard = (function () {
     function reset() {
         for (x in board) {
             for (y in board[row]) {
-                board[x][y].changeMark("");
+                board[x][y].setMark("");
             }
         }
     }
