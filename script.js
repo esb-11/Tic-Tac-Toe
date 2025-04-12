@@ -1,15 +1,14 @@
-const board = (function () {
+const gameBoard = (function () {
     // Represent the Tic-Tac-Toe board
-    const boardArray = [[], [], []];
+    const board = [[], [], []];
 
     init();
 
     function init() {
-        for (row in boardArray) {
+        for (row in board) {
             for (let i = 0; i< 3; i++) {
                 // Create board, 3 by 3 bidmensional array
-                boardArray[row].push(makeBoardSpace());
-                boardArray[row][i].changeMark(( i % 2 == 0 ? "X" : "O"));
+                board[row].push(makeBoardSpace());
             }
         }
     }
@@ -30,7 +29,7 @@ const board = (function () {
     }
 
     function log() {
-        console.log(boardArray);
+        console.log(board);
     }
 
     return { markSpace, reset, log };
