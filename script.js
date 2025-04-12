@@ -1,15 +1,18 @@
 const gameBoard = (function () {
     // Represent the Tic-Tac-Toe board
-    const board = [[], [], []];
+    const board = [];
+    const NUMBER_OF_ROWS = 3;
+    const NUMBER_OF_COLUMNS = 3;
 
     init();
 
     function init() {
-        for (row in board) {
-            for (let i = 0; i< 3; i++) {
-                // Create board, 3 by 3 bidmensional array
-                board[row].push(makeBoardSpace());
+        for (let i = 0; i < NUMBER_OF_ROWS; i++) {
+            const row = [];
+            for (let j = 0; j < NUMBER_OF_COLUMNS; j++) {
+                row.push(makeBoardSpace());
             }
+            board.push(row);
         }
     }
 
