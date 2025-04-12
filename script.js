@@ -10,24 +10,20 @@ const gameBoard = (function () {
         for (let i = 0; i < NUMBER_OF_ROWS; i++) {
             const row = [];
             for (let j = 0; j < NUMBER_OF_COLUMNS; j++) {
-                row.push(makeBoardSpace(i, j));
+                row.push(makeBoardSpace());
             }
             board.push(row);
         }
     }
 
-    function makeBoardSpace(row, column) {
-        
-        function changeMark(newMark) {
-            this.mark = newMark;
+    function makeBoardSpace() {
+        let mark = "";
+
+        function setMark(newMark) {
+            mark = newMark;
         }
 
-        function checkWinner() {
-            // Check row
-
-        }
-
-        return { mark: "", changeMark, checkWinner }
+        return { setMark }
     }
 
     function markSpace(mark, row, column) {
