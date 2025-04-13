@@ -2,6 +2,7 @@ const gameBoard = (function () {
     // Represent the Tic-Tac-Toe board
     const board = [];
     const BOARD_SIZE = 3;
+    let empty_spaces = BOARD_SIZE * BOARD_SIZE;
 
     init();
 
@@ -46,8 +47,10 @@ const gameBoard = (function () {
     }
 
     function markSpace(mark, row, column) {
-        const cell = board[row][column]
+        const cell = board[row][column];
+        if (!cell.isEmpty()) return;
         cell.setMark(mark);
+        empty_spaces--;
     }
 
     function reset() {
@@ -56,6 +59,7 @@ const gameBoard = (function () {
                 board[row][col].reset();
             }
         }
+        empty_spaces = BOARD_SIZE * BOARD_SIZE;
     }
 
     function log() {
@@ -110,6 +114,66 @@ const game = (function () {
     // Module to handle the game interactions
     const NUMBER_OF_PLAYERS = 2;
     const players = [];
+    let currentPlayer = 0;
 
-    return { addPlayer, playRound, restart };
+    function addPlayer(name, mark) {
+        if (players.length > NUMBER_OF_PLAYERS) return;
+
+        let score = 0;
+        
+        function getScore() {
+            return score;
+        }
+        
+        function increaseScore() {
+            score++;
+        }
+
+        function resetScore() {
+            score = 0;
+        }
+
+        function getName() {
+            return name;
+        }
+
+        function setName(newName) {
+            name = newName;
+        }
+
+        function getMark() {
+            return mark;
+        }
+
+        function setMark(newMark) {
+            mark = newMark;
+        }
+
+        const player = { getName, setName, getMark, setMark, getScore, increaseScore, resetScore };
+        players.push(player);
+        console.log(players);
+    }
+
+    function restart() {
+        players.forEach( player => player.resetScore() );
+        gameBoard.reset();
+    }
+
+    function nextPlayer() {
+        currentPlayer = (currentPlayer == (NUMBER_OF_PLAYERS - 1) ? 0 : currentPlayer + 1);
+    }
+
+    function getCurrentPlayer() {
+        return players[currentPlayer];
+    }
+
+    function getScores() {
+        const scores = {};
+        players.forEach(player => {
+            scores[player.getName()] = player.getScore();
+        });
+        return scores;
+    }
+
+    return { addPlayer, nextPlayer, restart, getCurrentPlayer, getScores };
 })();
