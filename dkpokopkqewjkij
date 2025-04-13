@@ -1,0 +1,59 @@
+[33mcommit 5b76af8b76a414d3fb530db227afad623b6da899[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sun Apr 13 15:24:51 2025 -0300
+
+    add checkWinner method
+
+[33mcommit 87e365c9ae3fb0f62fb401a2de21e5b0263496ff[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 15:55:11 2025 -0300
+
+    refactor gameBoard makeBoardSpace method
+
+[33mcommit 51b60e24d633047050e359da4f2998b831229c71[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 15:54:09 2025 -0300
+
+    refactor gameBoard makeBoardSpace method
+
+[33mcommit 0b0e85edf7ea49790cbd67ea744bd463d906da8e[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 15:51:39 2025 -0300
+
+    refactor gameBoard makeBoardSpace method
+
+[33mcommit 4fdd912fb0a29dfee0c0fbcd0f686529b5370cde[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 15:45:30 2025 -0300
+
+    refactor gameBoard markSpace method
+
+[33mcommit cbedf80b328712ebd10640f5c239b2b1fc285769[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 15:27:43 2025 -0300
+
+    refactor gameBoard init method
+
+[33mcommit 37aece32c4d81627481622d5daa7834cf0a8b81a[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 14:36:13 2025 -0300
+
+    Add markSpace and reset board methods
+
+[33mcommit b266348a376819e37d8524f12dfe25484e88a125[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Sat Apr 12 07:17:57 2025 -0300
+
+    change board name
+
+[33mcommit 9c0784292f6d07f4b58ddda0e25a9c7301c71f65[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Fri Apr 11 14:28:06 2025 -0300
+
+    Add game objects
+
+[33mcommit ab2c7e24726ba407150fc9b21de81ee6a8168a20[m
+Author: Eduardo <ebarbosa0411@gmail.com>
+Date:   Fri Apr 11 06:51:10 2025 -0300
+
+    Create project files

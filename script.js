@@ -34,19 +34,26 @@ const gameBoard = (function () {
             return column;
         }
 
-        return { getRow, getColumn, getMark, setMark }
+        function reset() {
+            mark = "";
+        }
+
+        function isEmpty() {
+            return mark == "";
+        }
+
+        return { getRow, getColumn, getMark, setMark, reset, isEmpty }
     }
 
     function markSpace(mark, row, column) {
         const cell = board[row][column]
         cell.setMark(mark);
-        if (checkWinner(cell)) console.log("GAME WON!");
     }
 
     function reset() {
-        for (x in board) {
-            for (y in board[row]) {
-                board[x][y].setMark("");
+        for (row in board) {
+            for (col in board[row]) {
+                board[row][col].reset();
             }
         }
     }
@@ -61,7 +68,10 @@ const gameBoard = (function () {
         });
     }
 
-    function checkWinner(cell) {
+    function checkWinner(x = 1, y = 1) {
+        const cell = board[x][y];
+        if (cell.isEmpty()) return false;
+        
         // Check row
         const boardRow = board[cell.getRow()];
         if (!boardRow.find(checkRow)) return true;
@@ -93,17 +103,13 @@ const gameBoard = (function () {
         }
     }
 
-    return { markSpace, reset, log };
+    return { markSpace, reset, checkWinner, log };
 })();
 
 const game = (function () {
     // Module to handle the game interactions
+    const NUMBER_OF_PLAYERS = 2;
+    const players = [];
 
-    return {};
+    return { addPlayer, playRound, restart };
 })();
-
-function makePlayer() {
-    // Player factory function
-
-    return {};
-};
