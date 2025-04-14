@@ -107,10 +107,14 @@ const gameBoard = (function () {
         }
     }
 
-    return { markSpace, reset, checkWinner, log };
+    function isFull() {
+        return empty_spaces == 0;
+    }
+
+    return { markSpace, reset };
 })();
 
-const game = (function () {
+const gamePlayers = (function () {
     // Module to handle the game interactions
     const NUMBER_OF_PLAYERS = 2;
     const players = [];
@@ -176,4 +180,32 @@ const game = (function () {
     }
 
     return { addPlayer, nextPlayer, restart, getCurrentPlayer, getScores };
+})();
+
+const events = (function() {
+    const events = {};
+
+    function on(eventName, fn) {
+        events[eventName] = events[eventName] || [];
+        events[eventName].push(fn);
+    }
+
+    function off(eventName, fn) {
+        if (!events[eventName]) return;
+
+        for (e in events[eventName]) {
+            if (events[eventName][e] == fn) {
+                events[eventName].splice(e, 1);
+                break;
+            }
+        }
+    }
+
+    function emit(eventName, data) {
+        if (!events[eventName]) return;
+
+        events[eventName].forEach(e => e(data));
+    }
+    
+    return { on, off, emit };
 })();
