@@ -1,4 +1,8 @@
-const events = (function() {
+const BOARD_SIZE = 3;
+const NUMBER_OF_PLAYERS = 2;
+const PLAYERS_MARKS = ["X", "O"];
+
+const events = (function () {
     const events = {};
 
     function on(eventName, fn) {
@@ -29,8 +33,8 @@ const events = (function() {
 const gameBoard = (function () {
     // Represent the Tic-Tac-Toe board
     const board = [];
-    const BOARD_SIZE = 3;
     let empty_spaces = BOARD_SIZE * BOARD_SIZE;
+    let currentMark = PLAYERS_MARKS[0];
 
     init();
 
@@ -46,6 +50,11 @@ const gameBoard = (function () {
         events.on("draw", reset);
         events.on("restart", reset);
         events.on("turnPlayed", markSpace);
+        events.on("playerChanged", changeMark)
+    }
+
+    function changeMark(currentPlayer) {
+        currentMark = PLAYERS_MARKS[currentPlayer];
     }
 
     function makeBoardSpace(row, column) {
@@ -80,19 +89,10 @@ const gameBoard = (function () {
 
     function markSpace(coord) {
         let [row, column] = coord;
-        const mark = gamePlayers.getCurrentPlayer().getMark();
         const cell = board[row][column];
         if (!cell.isEmpty()) return;
-        cell.setMark(mark);
+        cell.setMark(currentMark);
         events.emit("boardChanged", board);
-
-        board.forEach((row) => {
-            let str = "";
-            row.forEach((cell) => {
-                str = str + cell.getMark();
-            });
-            console.log(str);
-        });
         
         empty_spaces--;
         const won = checkWinner(row, column);
@@ -146,13 +146,10 @@ const gameBoard = (function () {
 
         return false;
     }
-
-    return { markSpace, reset };
 })();
 
 const gamePlayers = (function () {
     // Module to handle the game interactions
-    const NUMBER_OF_PLAYERS = 2;
     const players = [];
     let currentPlayer = 0;
 
@@ -162,11 +159,13 @@ const gamePlayers = (function () {
         events.on("restart", reset);
         events.on("won", () => { getCurrentPlayer().increaseScore() });
         events.on("turnEnded", nextPlayer);
+        events.on("addPlayer", addPlayer);
     }
 
-    function addPlayer(name, mark) {
+    function addPlayer(name) {
         if (players.length > NUMBER_OF_PLAYERS) return;
 
+        const mark = PLAYERS_MARKS[players.length];
         let score = 0;
         
         function getScore() {
@@ -196,12 +195,7 @@ const gamePlayers = (function () {
             return mark;
         }
 
-        function setMark(newMark) {
-            mark = newMark;
-            events.emit("markChanged");
-        }
-
-        const player = { getName, setName, getMark, setMark, getScore, increaseScore, resetScore };
+        const player = { getName, setName, getMark, getScore, increaseScore, resetScore };
         players.push(player);
         events.emit("playerAdded", players);
     }
@@ -213,8 +207,9 @@ const gamePlayers = (function () {
     }
 
     function nextPlayer() {
-        currentPlayer = (currentPlayer == (NUMBER_OF_PLAYERS - 1) ? 0 : currentPlayer + 1);
-        events.emit("playerChanged");
+        currentPlayer++;
+        if (currentPlayer == NUMBER_OF_PLAYERS) currentPlayer = 0;
+        events.emit("playerChanged", currentPlayer);
     }
 
     function getCurrentPlayer() {
@@ -228,6 +223,8 @@ const gamePlayers = (function () {
         });
         return scores;
     }
+})();
 
-    return { addPlayer, nextPlayer, reset, getCurrentPlayer, getScores };
+const gameDisplay = (function () {
+
 })();
