@@ -45,6 +45,7 @@ const gameBoard = (function () {
         events.on("won", reset);
         events.on("draw", reset);
         events.on("restart", reset);
+        events.on("turnPlayed", markSpace);
     }
 
     function makeBoardSpace(row, column) {
@@ -77,15 +78,26 @@ const gameBoard = (function () {
         return { getRow, getColumn, getMark, setMark, reset, isEmpty }
     }
 
-    function markSpace(mark, row, column) {
+    function markSpace(coord) {
+        let [row, column] = coord;
+        const mark = gamePlayers.getCurrentPlayer().getMark();
         const cell = board[row][column];
         if (!cell.isEmpty()) return;
         cell.setMark(mark);
+        events.emit("boardChanged", board);
+
+        board.forEach((row) => {
+            let str = "";
+            row.forEach((cell) => {
+                str = str + cell.getMark();
+            });
+            console.log(str);
+        });
         
-        events.emit("boardChanged", board);        
         empty_spaces--;
         const won = checkWinner(row, column);
         if (!won && empty_spaces == 0) events.emit("draw");
+        events.emit("turnEnded");
     }
 
     function reset() {
@@ -95,6 +107,7 @@ const gameBoard = (function () {
             }
         }
         empty_spaces = BOARD_SIZE * BOARD_SIZE;
+        events.emit("boardChanged", board);
     }
 
     function checkWinner(x = 1, y = 1) {
@@ -146,7 +159,9 @@ const gamePlayers = (function () {
     init();
 
     function init() {
-        events.on("restart", resetScore);
+        events.on("restart", reset);
+        events.on("won", () => { getCurrentPlayer().increaseScore() });
+        events.on("turnEnded", nextPlayer);
     }
 
     function addPlayer(name, mark) {
@@ -160,10 +175,12 @@ const gamePlayers = (function () {
         
         function increaseScore() {
             score++;
+            events.emit("scoreChanged", players);
         }
 
         function resetScore() {
             score = 0;
+            events.emit("scoreChanged");
         }
 
         function getName() {
@@ -172,6 +189,7 @@ const gamePlayers = (function () {
 
         function setName(newName) {
             name = newName;
+            events.emit("nameChanged");
         }
 
         function getMark() {
@@ -180,6 +198,7 @@ const gamePlayers = (function () {
 
         function setMark(newMark) {
             mark = newMark;
+            events.emit("markChanged");
         }
 
         const player = { getName, setName, getMark, setMark, getScore, increaseScore, resetScore };
@@ -187,13 +206,15 @@ const gamePlayers = (function () {
         events.emit("playerAdded", players);
     }
 
-    function resetScore() {
+    function reset() {
         players.forEach( player => player.resetScore() );
-        gameBoard.reset();
+        currentPlayer = 0;
+        events.emit("scoreChanged");
     }
 
     function nextPlayer() {
         currentPlayer = (currentPlayer == (NUMBER_OF_PLAYERS - 1) ? 0 : currentPlayer + 1);
+        events.emit("playerChanged");
     }
 
     function getCurrentPlayer() {
@@ -208,5 +229,5 @@ const gamePlayers = (function () {
         return scores;
     }
 
-    return { addPlayer, nextPlayer, resetScore, getCurrentPlayer, getScores };
+    return { addPlayer, nextPlayer, reset, getCurrentPlayer, getScores };
 })();
