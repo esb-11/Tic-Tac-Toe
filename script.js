@@ -1,3 +1,31 @@
+const events = (function() {
+    const events = {};
+
+    function on(eventName, fn) {
+        events[eventName] = events[eventName] || [];
+        events[eventName].push(fn);
+    }
+
+    function off(eventName, fn) {
+        if (!events[eventName]) return;
+
+        for (e in events[eventName]) {
+            if (events[eventName][e] == fn) {
+                events[eventName].splice(e, 1);
+                break;
+            }
+        }
+    }
+
+    function emit(eventName, data) {
+        if (!events[eventName]) return;
+
+        events[eventName].forEach(e => e(data));
+    }
+    
+    return { on, off, emit };
+})();
+
 const gameBoard = (function () {
     // Represent the Tic-Tac-Toe board
     const board = [];
@@ -14,6 +42,9 @@ const gameBoard = (function () {
             }
             board.push(row);
         }
+        events.on("won", reset);
+        events.on("draw", reset);
+        events.on("restart", reset);
     }
 
     function makeBoardSpace(row, column) {
@@ -50,7 +81,11 @@ const gameBoard = (function () {
         const cell = board[row][column];
         if (!cell.isEmpty()) return;
         cell.setMark(mark);
+        
+        events.emit("boardChanged", board);        
         empty_spaces--;
+        const won = checkWinner(row, column);
+        if (!won && empty_spaces == 0) events.emit("draw");
     }
 
     function reset() {
@@ -62,53 +97,41 @@ const gameBoard = (function () {
         empty_spaces = BOARD_SIZE * BOARD_SIZE;
     }
 
-    function log() {
-        board.forEach((row) => {
-            const arr = [];
-            row.forEach((cell) => {
-                arr.push(cell.getMark());
-            });
-            console.log(arr);
-        });
-    }
-
     function checkWinner(x = 1, y = 1) {
         const cell = board[x][y];
         if (cell.isEmpty()) return false;
-        
+        const win = function () {
+            events.emit("won");
+            return true;
+        }
+    
         // Check row
         const boardRow = board[cell.getRow()];
-        if (!boardRow.find(checkRow)) return true;
-
+        if (!boardRow.find(checkRow)) return win();
         function checkRow(value) {
             return value.getMark() != cell.getMark();
         }
 
         // Check column
         const column = cell.getColumn();
-        if (!board.find(checkColumn)) return true;
-
+        if (!board.find(checkColumn)) return win();
         function checkColumn(row) {
             return row[column].getMark() != cell.getMark();
         }
 
         // Check diagonal
-        if (!board.find(checkDiagonal)) return true;
-
+        if (!board.find(checkDiagonal)) return win();
         function checkDiagonal(row, index) {
             return row[index].getMark() != cell.getMark();
         }
 
         // Check other diagonal
-        if (!board.find(checkReverseDiagonal)) return true;
-
+        if (!board.find(checkReverseDiagonal)) return win();
         function checkReverseDiagonal(row, index) {
             return checkDiagonal(row, (BOARD_SIZE - 1 - index));
         }
-    }
 
-    function isFull() {
-        return empty_spaces == 0;
+        return false;
     }
 
     return { markSpace, reset };
@@ -119,6 +142,12 @@ const gamePlayers = (function () {
     const NUMBER_OF_PLAYERS = 2;
     const players = [];
     let currentPlayer = 0;
+
+    init();
+
+    function init() {
+        events.on("restart", resetScore);
+    }
 
     function addPlayer(name, mark) {
         if (players.length > NUMBER_OF_PLAYERS) return;
@@ -155,10 +184,10 @@ const gamePlayers = (function () {
 
         const player = { getName, setName, getMark, setMark, getScore, increaseScore, resetScore };
         players.push(player);
-        console.log(players);
+        events.emit("playerAdded", players);
     }
 
-    function restart() {
+    function resetScore() {
         players.forEach( player => player.resetScore() );
         gameBoard.reset();
     }
@@ -179,33 +208,5 @@ const gamePlayers = (function () {
         return scores;
     }
 
-    return { addPlayer, nextPlayer, restart, getCurrentPlayer, getScores };
-})();
-
-const events = (function() {
-    const events = {};
-
-    function on(eventName, fn) {
-        events[eventName] = events[eventName] || [];
-        events[eventName].push(fn);
-    }
-
-    function off(eventName, fn) {
-        if (!events[eventName]) return;
-
-        for (e in events[eventName]) {
-            if (events[eventName][e] == fn) {
-                events[eventName].splice(e, 1);
-                break;
-            }
-        }
-    }
-
-    function emit(eventName, data) {
-        if (!events[eventName]) return;
-
-        events[eventName].forEach(e => e(data));
-    }
-    
-    return { on, off, emit };
+    return { addPlayer, nextPlayer, resetScore, getCurrentPlayer, getScores };
 })();
