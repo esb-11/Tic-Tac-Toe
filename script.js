@@ -45,28 +45,32 @@ const gameDisplay = (function () {
         boardDiv.classList.add("board-display");
         
         for (row in board) {
-            const rowDiv = makeRow(board[row]);
+            const rowDiv = makeRow(board[row], row);
             boardDiv.appendChild(rowDiv);
         }
 
         displayDiv.innerHTML = boardDiv.innerHTML;
     }
 
-    function makeRow(row) {
+    function makeRow(row, index) {
         const rowDiv = document.createElement("div");
         rowDiv.classList.add("board-row");
         
         for (cell in row) {
-            rowDiv.appendChild(makeCell(row[cell]));
+            rowDiv.appendChild(makeCell(row[cell], index, cell));
         }
 
         return rowDiv;
     }
 
-    function makeCell(cell) {
+    function makeCell(cell, row, column) {
         const cellDiv = document.createElement("div");
         cellDiv.classList.add("board-cell");
         cellDiv.innerText = cell.getMark();
+
+        cellDiv.setAttribute("data-row", row);
+        cellDiv.setAttribute("data-column", column);
+
         return cellDiv;
     }
 })();
