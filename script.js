@@ -30,7 +30,7 @@ const events = (function () {
 })();
 
 const gameDisplay = (function () {
-    const displayDiv = document.querySelector("#game-board");
+    const displayDiv = document.querySelector(".board-display");
     const player1Div = document.querySelector("#player1");
     const player2Div = document.querySelector("#player2");
 
@@ -49,7 +49,7 @@ const gameDisplay = (function () {
             boardDiv.appendChild(rowDiv);
         }
 
-        displayDiv.appendChild(boardDiv);
+        displayDiv.innerHTML = boardDiv.innerHTML;
     }
 
     function makeRow(row) {
@@ -57,14 +57,17 @@ const gameDisplay = (function () {
         rowDiv.classList.add("board-row");
         
         for (cell in row) {
-            const cellDiv = document.createElement("div");
-            cellDiv.classList.add("board-cell");
-            cellDiv.innerText = row[cell].getMark();
-
-            rowDiv.appendChild(cellDiv);
+            rowDiv.appendChild(makeCell(row[cell]));
         }
 
         return rowDiv;
+    }
+
+    function makeCell(cell) {
+        const cellDiv = document.createElement("div");
+        cellDiv.classList.add("board-cell");
+        cellDiv.innerText = cell.getMark();
+        return cellDiv;
     }
 })();
 
