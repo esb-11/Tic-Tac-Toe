@@ -23,7 +23,6 @@ const events = (function () {
 
     function emit(eventName, data) {
         if (!events[eventName]) return;
-        console.log(eventName);
         events[eventName].forEach(e => e(data));
     }
     
@@ -42,7 +41,7 @@ const gameDisplay = (function () {
     }
 
     function createBoard(board) {
-        const boardDiv = document.createElement("div")
+        const boardDiv = document.createElement("div");
         boardDiv.classList.add("board-display");
         
         for (row in board) {
@@ -50,8 +49,7 @@ const gameDisplay = (function () {
             boardDiv.appendChild(rowDiv);
         }
 
-        console.log(boardDiv.innerHTML);
-        displayDiv.innerHTML = boardDiv.innerHTML;
+        displayDiv.appendChild(boardDiv);
     }
 
     function makeRow(row) {
@@ -62,6 +60,7 @@ const gameDisplay = (function () {
             const cellDiv = document.createElement("div");
             cellDiv.classList.add("board-cell");
             cellDiv.innerText = row[cell].getMark();
+
             rowDiv.appendChild(cellDiv);
         }
 
