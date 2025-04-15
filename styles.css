@@ -102,6 +102,6 @@ button:hover {
     border-left: 2px solid #393E46;
 }
 
-.game-display {
+#game-board {
     background-color: #EEEEEE;
 }

@@ -23,11 +23,50 @@ const events = (function () {
 
     function emit(eventName, data) {
         if (!events[eventName]) return;
-
+        console.log(eventName);
         events[eventName].forEach(e => e(data));
     }
     
     return { on, off, emit };
+})();
+
+const gameDisplay = (function () {
+    const displayDiv = document.querySelector("#game-board");
+    const player1Div = document.querySelector("#player1");
+    const player2Div = document.querySelector("#player2");
+
+    init();
+
+    function init() {
+        events.on("boardChanged", createBoard);
+    }
+
+    function createBoard(board) {
+        const boardDiv = document.createElement("div")
+        boardDiv.classList.add("board-display");
+        
+        for (row in board) {
+            const rowDiv = makeRow(board[row]);
+            boardDiv.appendChild(rowDiv);
+        }
+
+        console.log(boardDiv.innerHTML);
+        displayDiv.innerHTML = boardDiv.innerHTML;
+    }
+
+    function makeRow(row) {
+        const rowDiv = document.createElement("div");
+        rowDiv.classList.add("board-row");
+        
+        for (cell in row) {
+            const cellDiv = document.createElement("div");
+            cellDiv.classList.add("board-cell");
+            cellDiv.innerText = row[cell].getMark();
+            rowDiv.appendChild(cellDiv);
+        }
+
+        return rowDiv;
+    }
 })();
 
 const gameBoard = (function () {
@@ -46,6 +85,7 @@ const gameBoard = (function () {
             }
             board.push(row);
         }
+        events.emit("boardChanged", board);
         events.on("won", reset);
         events.on("draw", reset);
         events.on("restart", reset);
@@ -225,6 +265,4 @@ const gamePlayers = (function () {
     }
 })();
 
-const gameDisplay = (function () {
 
-})();
