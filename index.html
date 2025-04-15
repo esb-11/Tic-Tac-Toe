@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tic-Tac-Toe</title>
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -17,40 +18,32 @@
 
         <div class="main">
             <div class="player-container" id="player1">
-                <div class="player-name">Player1</div>
-                <div class="player-score">SCore: 0</div>
-                <button class="add-player-button">Add player</button>
-            </div>
-
-            <div class="game-display">
-                <div class="game-row">
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
+                <div class="player-info">
+                    <div class="player-name">Player1</div>
+                    <div class="player-score">Score: 0</div>
                 </div>
-
-                <div class="game-row">
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
-                </div>
-
-                <div class="game-row">
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
-                    <div class="game-cell"></div>
+                <div class="add-player-input">
+                    <input type="text" name="" id="" class="input-player-name" placeholder="Player name">
+                    <button class="add-player-button">Add player</button>
                 </div>
             </div>
+
+            <div class="game-display"></div>
 
             <div class="player-container" id="player2">
-                <div class="player-name">Player2</div>
-                <div class="player-score">Score: 0</div>
-                <button class="add-player-button">Add player</button>
+                <div class="player-info">
+                    <div class="player-name">Player2</div>
+                    <div class="player-score">Score: 0</div>
+                </div>
+                <div class="add-player-input">
+                    <input type="text" name="" id="" class="input-player-name" placeholder="Player name">
+                    <button class="add-player-button">Add player</button>
+                </div>
             </div>
         </div>
 
         <div class="footer">
-            <p>ESB</p>
+            <p>© ESB. All rights reserved.</p>
         </div>
     </div>
 </body>
