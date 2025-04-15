@@ -38,6 +38,8 @@ const gameDisplay = (function () {
 
     function init() {
         events.on("boardChanged", createBoard);
+        events.on("updateScore", updateScore);
+
         displayDiv.addEventListener("click", (e) => {
             const cell = e.target;
             const row = parseInt(cell.dataset.row);
@@ -47,6 +49,11 @@ const gameDisplay = (function () {
 
         displayPlayer(player1Div);
         displayPlayer(player2Div);
+    }
+
+    function updateScore(scores) {
+        player1Div.querySelector(".player-score").innerText = `Score ${scores[0]}`;
+        player2Div.querySelector(".player-score").innerText = `Score ${scores[1]}`;
     }
 
     function displayPlayer(player) {
@@ -233,9 +240,15 @@ const gamePlayers = (function () {
 
     function init() {
         events.on("restart", reset);
-        events.on("won", () => { getCurrentPlayer().increaseScore() });
+        events.on("won", roundWon);
         events.on("turnEnded", nextPlayer);
         events.on("addPlayer", addPlayer);
+    }
+
+    function roundWon() {
+        getCurrentPlayer().increaseScore();
+        const scores = getScores();
+        events.emit("updateScore", scores);
     }
 
     function addPlayer(name) {
@@ -294,10 +307,11 @@ const gamePlayers = (function () {
     }
 
     function getScores() {
-        const scores = {};
+        const scores = [];
         players.forEach(player => {
-            scores[player.getName()] = player.getScore();
+            scores.push(player.getScore());
         });
+        console.log(scores);
         return scores;
     }
 })();
