@@ -38,7 +38,7 @@ const gameDisplay = (function () {
 
     function init() {
         events.on("boardChanged", createBoard);
-        events.on("updateScore", updateScore);
+        events.on("scoreChanged", updateScore);
 
         displayDiv.addEventListener("click", (e) => {
             const cell = e.target;
@@ -49,6 +49,9 @@ const gameDisplay = (function () {
 
         displayPlayer(player1Div);
         displayPlayer(player2Div);
+
+        const restartButton = document.querySelector(".restart-button");
+        restartButton.addEventListener("click", (e) => { events.emit("restart") });
     }
 
     function updateScore(scores) {
@@ -247,8 +250,7 @@ const gamePlayers = (function () {
 
     function roundWon() {
         getCurrentPlayer().increaseScore();
-        const scores = getScores();
-        events.emit("updateScore", scores);
+        events.emit("scoreChanged", getScores());
     }
 
     function addPlayer(name) {
@@ -263,12 +265,11 @@ const gamePlayers = (function () {
         
         function increaseScore() {
             score++;
-            events.emit("scoreChanged", players);
+            events.emit("scoreChanged", getScores());
         }
 
         function resetScore() {
             score = 0;
-            events.emit("scoreChanged");
         }
 
         function getName() {
@@ -293,7 +294,8 @@ const gamePlayers = (function () {
     function reset() {
         players.forEach( player => player.resetScore() );
         currentPlayer = 0;
-        events.emit("scoreChanged");
+        events.emit("playerChanged", currentPlayer);
+        events.emit("scoreChanged", getScores());
     }
 
     function nextPlayer() {
@@ -315,5 +317,3 @@ const gamePlayers = (function () {
         return scores;
     }
 })();
-
-
