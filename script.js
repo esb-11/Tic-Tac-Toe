@@ -38,6 +38,30 @@ const gameDisplay = (function () {
 
     function init() {
         events.on("boardChanged", createBoard);
+        displayDiv.addEventListener("click", (e) => {
+            const cell = e.target;
+            const row = parseInt(cell.dataset.row);
+            const column = parseInt(cell.dataset.column);
+            events.emit("turnPlayed", [row, column]);
+        });
+
+        displayPlayer(player1Div);
+        displayPlayer(player2Div);
+    }
+
+    function displayPlayer(player) {
+        const playerButton = player.querySelector(".add-player-button");
+        const playerInput = player.querySelector("input");
+        const playerInfo = player.querySelector(".player-info")
+        playerButton.addEventListener("click", (e) => {
+            const playerName = playerInput.value; 
+            events.emit("addPlayer", playerName);
+            playerInput.value = "";
+            player.querySelector(".add-player-input").style.display = "none" ;
+            
+            playerInfo.style.display = "block";
+            playerInfo.querySelector(".player-name").innerText = playerName;
+        });
     }
 
     function createBoard(board) {
@@ -80,6 +104,7 @@ const gameBoard = (function () {
     const board = [];
     let empty_spaces = BOARD_SIZE * BOARD_SIZE;
     let currentMark = PLAYERS_MARKS[0];
+    let active = false;
 
     init();
 
@@ -92,11 +117,16 @@ const gameBoard = (function () {
             board.push(row);
         }
         events.emit("boardChanged", board);
+        events.on("startGame", activate);
         events.on("won", reset);
         events.on("draw", reset);
         events.on("restart", reset);
         events.on("turnPlayed", markSpace);
         events.on("playerChanged", changeMark)
+    }
+
+    function activate() {
+        active = true;
     }
 
     function changeMark(currentPlayer) {
@@ -136,7 +166,7 @@ const gameBoard = (function () {
     function markSpace(coord) {
         let [row, column] = coord;
         const cell = board[row][column];
-        if (!cell.isEmpty()) return;
+        if (!cell.isEmpty() || !active) return;
         cell.setMark(currentMark);
         events.emit("boardChanged", board);
         
@@ -244,6 +274,7 @@ const gamePlayers = (function () {
         const player = { getName, setName, getMark, getScore, increaseScore, resetScore };
         players.push(player);
         events.emit("playerAdded", players);
+        if (players.length == NUMBER_OF_PLAYERS) events.emit("startGame");
     }
 
     function reset() {

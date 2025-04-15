@@ -134,7 +134,12 @@ button:hover {
 
 .board-cell {
     background-color: #EEEEEE;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 200px;
     height: 200px;
+
+    color: #1D3557;
+    font-size: 128px;
 }
